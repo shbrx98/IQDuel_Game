@@ -9,11 +9,13 @@
     "start": "node src/server/index.js"
   },
   "dependencies": {
+    "backend": "file:",
     "express": "^5.1.0",
     "next": "14.2.24",
     "react": "^18",
     "react-dom": "^18",
     "socket.io": "^4.8.1",
+    "ts-node": "^10.9.2",
     "uuid": "^11.1.0",
     "ws": "^8.18.1"
   },
