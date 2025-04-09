@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  gol_game:
+    image: "${REGISTRY_URL}/${IMAGE_NAME}:${IMAGE_TAG}"
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3050:3000"
+      - "3051:3001"
+    restart: always
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://loki.samduel.com:3100/loki/api/v1/push"
+        loki-external-labels: service=golgame_dev,container_name=golgame_dev
+        loki-pipeline-stages: |
+          - json:
+              expressions:
+                level: level
+                message: messa
+    networks:
+      - app-network
+
+    volumes:
+      - app_data:/app
+      - node_module:/app/node_modules
+    environment:
+      - NODE_ENV=production
+    command: npm run dev
+
+volumes:
+  app_data:
+  node_module:
+
+networks:
+  app-network: 
+
+
+
