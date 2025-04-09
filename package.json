@@ -2,23 +2,29 @@
   "name": "backend",
   "version": "0.1.0",
   "private": true,
+  "type": "commonjs",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "ts-node src/server/index.ts",
+    "build": "tsc && next build",
+    "start": "node src/server/index.js"
   },
   "dependencies": {
+    "express": "^5.1.0",
+    "next": "14.2.24",
     "react": "^18",
     "react-dom": "^18",
-    "next": "14.2.24"
+    "socket.io": "^4.8.1",
+    "uuid": "^11.1.0",
+    "ws": "^8.18.1"
   },
   "devDependencies": {
-    "typescript": "^5",
-    "@types/node": "^20",
+    "@types/express": "^5.0.1",
+    "@types/node": "^20.17.30",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/ws": "^8.18.1",
     "postcss": "^8",
-    "tailwindcss": "^3.4.1"
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.8.2"
   }
 }
