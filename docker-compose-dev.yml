@@ -7,8 +7,7 @@ services:
       context: .
       dockerfile: Dockerfile.dev
     ports:
-      - "3050:3000"
-      - "3051:3001"
+      - "3050:4001"
     restart: always
     logging:
       driver: loki
