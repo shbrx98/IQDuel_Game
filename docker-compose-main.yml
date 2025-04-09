@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  gol_game:
+  gol_game_backend:
     image: "${REGISTRY_URL}/${IMAGE_NAME}:${IMAGE_TAG}"
     build:
       context: .
@@ -14,7 +14,7 @@ services:
       driver: loki
       options:
         loki-url: "http://loki.samduel.com:3100/loki/api/v1/push" 
-        loki-external-labels: service=gol_game_prod,container_name=gol_game_prod
+        loki-external-labels: service=gol_game_backend_prod,container_name=gol_game_backend_prod
         loki-pipeline-stages: |
           - json:
               expressions:

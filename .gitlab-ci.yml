@@ -1,0 +1,48 @@
+stages:
+    - build
+    - deploy
+
+variables:
+    IMAGE_NAME: "${CI_PROJECT_NAME}"
+    IMAGE_TAG: "${CI_COMMIT_SHORT_SHA}"
+    REGISTRY_URL: "${NEXUS_URL}"
+
+build-job-develop:
+    image: nexus.samduel.com:8085/docker:dind
+    services:
+      - name: docker:dind
+
+    stage: build
+    only:
+        - Develop
+    script:
+        - git clone http://root:${GIT_TOKEN}@gitlab.samduel.com/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}.git
+        - cd ${CI_PROJECT_NAME}
+        - git checkout Develop
+        - git pull origin Develop
+#        - source "$Dev_Env" 
+#        - cat "$Dev_Env" > .env
+ #       - echo "Building the project..."
+        - docker build -t "$REGISTRY_URL/$IMAGE_NAME:$IMAGE_TAG" -f Dockerfile.dev .
+        - echo "$NEXUS_PASSWORD" | docker login $REGISTRY_URL -u $NEXUS_USERNAME --password-stdin
+        - docker push "$REGISTRY_URL/$IMAGE_NAME:$IMAGE_TAG"
+    tags:
+        - dnd-front
+
+deploy-job-develop:
+    stage: deploy
+    only:
+        - Develop
+    before_script:
+        - git clone http://root:${GIT_TOKEN}@gitlab.samduel.com/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}.git
+        - cd ${CI_PROJECT_NAME}
+        - git checkout Develop
+        - git pull origin Develop
+        - echo "$NEXUS_PASSWORD" | docker login $REGISTRY_URL -u $NEXUS_USERNAME --password-stdin
+    script:
+        - docker pull $REGISTRY_URL/$IMAGE_NAME:$IMAGE_TAG
+#        - cat "$Dev_Env" > .env
+        - docker compose -f docker-compose-dev.yml up -d
+        - docker system prune -f
+    tags:
+        - dind-13
